@@ -34,10 +34,22 @@ const deleteContact = async (req, res) => {
 
 const update = async (req, res) => {
   const contactId = req.params.contactId;
-  const result = await contactService.updateContact(contactId, req.body);
-  if (!result) {
+  const existingContact = await contactService.getContactById(contactId);
+
+  if (!existingContact) {
     throw HttpErrors(404, `Not found`);
   }
+  if (req.body.name) {
+    existingContact.name = req.body.name;
+  }
+  if (req.body.email) {
+    existingContact.email = req.body.email;
+  }
+  if (req.body.phone) {
+    existingContact.phone = req.body.phone;
+  }
+  const result = await contactService.updateContact(contactId, existingContact);
+
   res.json(result);
 };
 

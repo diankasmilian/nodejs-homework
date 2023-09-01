@@ -18,7 +18,7 @@ router.delete('/:contactId', contactsController.deleteContact);
 
 router.put(
   '/:contactId',
-  contactsValidation.addContactValidation,
+  contactsValidation.updateContactValidation,
   contactsController.update
 );
 
