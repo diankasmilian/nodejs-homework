@@ -9,7 +9,6 @@ const getAll = async (req, res) => {
 
 const getById = async (req, res) => {
   const contactId = req.params.contactId;
-  console.log(req.params)
   const result = await Contact.findById(contactId)
   if (!result) {
     throw HttpErrors(404, 'Not found');
@@ -24,7 +23,7 @@ const add = async (req, res) => {
 
 const deleteContact = async (req, res) => {
   const contactId = req.params.contactId;
-  const result = await contactService.removeContact(contactId);
+  const result = await Contact.findByIdAndDelete(contactId);
   if (!result) {
     throw HttpErrors(404, `Not found`);
   }
@@ -35,22 +34,10 @@ const deleteContact = async (req, res) => {
 
 const update = async (req, res) => {
   const contactId = req.params.contactId;
-  const existingContact = await contactService.getContactById(contactId);
-
-  if (!existingContact) {
+  const result = await Contact.findByIdAndUpdate(contactId, req.body, {new: true});
+  if (!result) {
     throw HttpErrors(404, `Not found`);
   }
-  if (req.body.name) {
-    existingContact.name = req.body.name;
-  }
-  if (req.body.email) {
-    existingContact.email = req.body.email;
-  }
-  if (req.body.phone) {
-    existingContact.phone = req.body.phone;
-  }
-  const result = await contactService.updateContact(contactId, existingContact);
-
   res.json(result);
 };
 
@@ -58,6 +45,6 @@ export default {
   getAll: ctrlWrapper(getAll),
   getById: ctrlWrapper(getById),
   add: ctrlWrapper(add),
-  // deleteContact: ctrlWrapper(deleteContact),
-  // update: ctrlWrapper(update),
+  deleteContact: ctrlWrapper(deleteContact),
+  update: ctrlWrapper(update),
 };
