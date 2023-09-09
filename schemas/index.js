@@ -1,1 +1,0 @@
-export {default as contactSchema} from './contacts-shema.js'
