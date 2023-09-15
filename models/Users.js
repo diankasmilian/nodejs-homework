@@ -33,6 +33,8 @@ const userSchema = new Schema(
 );
 
 userSchema.post('save', handleSaveError);
+userSchema.pre('findOneAndUpdate', runValidateAtUpdate)
+userSchema.post('findOneAndUpdate', handleSaveError)
 
 export const registerSchema = Joi.object({
   email: Joi.string().email().required(),
@@ -46,10 +48,9 @@ export const loginSchema = Joi.object({
   password: Joi.string().required(),
 });
 
-const schemas = {
-   registerSchema,
-   loginSchema
-}
+export const updateSubscriptionSchema = Joi.object({
+  subscription: Joi.string().valid(...planList).required()
+})
 
 const User = model('user', userSchema)
 

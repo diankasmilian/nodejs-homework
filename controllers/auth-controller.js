@@ -75,9 +75,19 @@ await User.findByIdAndUpdate(_id, {token: ""})
 res.status(204)
 }
 
+const updateSubscription = async (req, res) => {
+   const {_id} = req.user;
+   const result = await User.findByIdAndUpdate(_id, req.body, {new: true})
+   if (!result) {
+      throw HttpErrors(404, `Not found`);
+    }
+    res.json(result);
+}
+
 export default {
    register: ctrlWrapper(register),
    login: ctrlWrapper(login),
    getCurrent: ctrlWrapper(getCurrent),
-   logout: ctrlWrapper(logout)
+   logout: ctrlWrapper(logout),
+   updateSubscription: ctrlWrapper(updateSubscription)
 }
