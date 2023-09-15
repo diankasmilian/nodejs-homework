@@ -33,12 +33,12 @@ const login = async (req, res) => {
    const user = await User.findOne({email})
 
    if (!user) {
-      throw HttpErrors(401, 'Email or password invalid')
+      throw HttpErrors(401, 'Email or password is wrong')
    }
 
    const comparePassword = await bcrypt.compare(password, user.password)
    if (!comparePassword) {
-      throw HttpErrors(401, 'Email or password invalid')
+      throw HttpErrors(401, 'Email or password is wrong')
    }
 
    const {_id: id} = user;
@@ -52,14 +52,19 @@ const login = async (req, res) => {
 
    res.json({
        token,
+       user: {
+         email: user.email,
+         subscription: user.subscription
+       }
    })
 }
 
 const getCurrent = async (req, res) => {
-const {email} = req.user;
+const {email, subscription} = req.user;
 
 res.json({
-   email
+   email,
+   subscription
 })
 }
 

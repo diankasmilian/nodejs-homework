@@ -24,8 +24,7 @@ const userSchema = new Schema(
     token: String,
     owner: {
       type: Schema.Types.ObjectId,
-      ref: 'user',
-      // required: true
+      ref: 'user'
     },
   },
   {
