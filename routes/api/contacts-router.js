@@ -2,7 +2,7 @@ import express from 'express';
 import { contactsController } from '../../controllers/index.js';
 import * as contactSchema from '../../models/Contact.js';
 import { validateBody } from '../../decorators/index.js';
-import { isValidId, authenticate, checkContactOwnership } from '../../middlewares/index.js';
+import { isValidId, authenticate } from '../../middlewares/index.js';
 
 const contactAddValidation = validateBody(contactSchema.contactAddSchema);
 const contactsUpdateValidation = validateBody(
@@ -18,17 +18,17 @@ router.use(authenticate);
 
 router.get('/', contactsController.getAll);
 
-router.get('/:contactId', isValidId, checkContactOwnership, contactsController.getById);
+router.get('/:contactId', isValidId, contactsController.getById);
 
 router.post('/', contactAddValidation, contactsController.add);
 
-router.delete('/:contactId', isValidId, checkContactOwnership, contactsController.deleteContact);
+router.delete('/:contactId', isValidId, contactsController.deleteContact);
 
 router.put(
   '/:contactId',
   contactsUpdateValidation,
   isValidId,
-  checkContactOwnership,
+ 
   contactsController.update
 );
 
@@ -36,7 +36,7 @@ router.patch(
   '/:contactId/favorite',
   contactsUpdateStatusValidation,
   isValidId,
-  checkContactOwnership,
+ 
   contactsController.update
 );
 
