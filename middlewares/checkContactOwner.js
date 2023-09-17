@@ -6,13 +6,9 @@ const checkContactOwnership = async (req, res, next) => {
    const {_id: owner} = req.user;
  
    try {
-     const contact = await Contact.findById(contactId);
+     const contact = await Contact.findOne({ _id: contactId, owner });
  
      if (!contact) {
-       throw HttpErrors(404);
-     }
- 
-     if (contact.owner.toString() !== owner.toString()) {
        throw HttpErrors(404);
      }
  
