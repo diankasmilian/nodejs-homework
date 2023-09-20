@@ -2,7 +2,7 @@ import express from 'express';
 import { contactsController } from '../../controllers/index.js';
 import * as contactSchema from '../../models/Contact.js';
 import { validateBody } from '../../decorators/index.js';
-import { isValidId, authenticate } from '../../middlewares/index.js';
+import { isValidId, authenticate, upload } from '../../middlewares/index.js';
 
 const contactAddValidation = validateBody(contactSchema.contactAddSchema);
 const contactsUpdateValidation = validateBody(
@@ -20,7 +20,7 @@ router.get('/', contactsController.getAll);
 
 router.get('/:contactId', isValidId, contactsController.getById);
 
-router.post('/', contactAddValidation, contactsController.add);
+router.post('/', upload.single("avatar"), contactAddValidation, contactsController.add);
 
 router.delete('/:contactId', isValidId, contactsController.deleteContact);
 
