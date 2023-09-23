@@ -1,5 +1,5 @@
 import Contact from '../models/Contact.js';
-import { HttpErrors } from '../helpers/index.js';
+import { HttpErrors, cloudinary } from '../helpers/index.js';
 import { ctrlWrapper } from '../decorators/index.js';
 
 const getAll = async (req, res) => {
