@@ -9,6 +9,7 @@ const router = express.Router();
 const userRegisterValidation = validateBody(userSchema.registerSchema)
 const userLoginValidation = validateBody(userSchema.loginSchema)
 const updateSubscriptionValidation = validateBody(userSchema.updateSubscriptionSchema);
+const verifyValidation = validateBody(userSchema.verifySchema)
 
 router.post('/register', upload.single("avatar"), userRegisterValidation, authController.register)
 
@@ -22,5 +23,9 @@ router.patch(
    '/', authenticate, updateSubscriptionValidation, authController.updateSubscription);
 
 router.patch('/avatars', upload.single("avatarURL"), authenticate, authController.updateAvatar)
+
+router.get('/verify/:verificationToken', authController.verify)
+
+router.post('/verify', verifyValidation, authController.resendVerifyEmail)
 
 export default router;

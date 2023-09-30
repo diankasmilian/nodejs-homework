@@ -1,12 +1,11 @@
 import { Schema, model } from 'mongoose';
 import Joi from 'joi';
-import { handleSaveError, runValidateAtUpdate } from './hooks.js';
+import { handleSaveError } from './hooks.js';
 
 const planList = ['starter', 'pro', 'business'];
 
 const userSchema = new Schema(
   {
-    
     email: {
       type: String,
       required: [true, 'Email is required'],
@@ -24,11 +23,19 @@ const userSchema = new Schema(
     token: String,
     owner: {
       type: Schema.Types.ObjectId,
-      ref: 'user'
+      ref: 'user',
     },
     avatarURL: {
       type: String,
-    }
+    },
+    verify: {
+      type: Boolean,
+      default: false,
+    },
+    verificationToken: {
+      type: String,
+      required: [true, 'Verify token is required'],
+    },
   },
   {
     versionKey: false,
@@ -36,14 +43,12 @@ const userSchema = new Schema(
 );
 
 userSchema.post('save', handleSaveError);
-userSchema.pre('findOneAndUpdate', runValidateAtUpdate)
-userSchema.post('findOneAndUpdate', handleSaveError)
+userSchema.post('findOneAndUpdate', handleSaveError);
 
 export const registerSchema = Joi.object({
   email: Joi.string().email().required(),
   password: Joi.string().required(),
-  subscription: Joi.string()
-    .valid(...planList)
+  subscription: Joi.string().valid(...planList),
 });
 
 export const loginSchema = Joi.object({
@@ -52,9 +57,15 @@ export const loginSchema = Joi.object({
 });
 
 export const updateSubscriptionSchema = Joi.object({
-  subscription: Joi.string().valid(...planList).required()
+  subscription: Joi.string()
+    .valid(...planList)
+    .required(),
+});
+
+export const verifySchema = Joi.object({
+  email: Joi.string().email().required()
 })
 
-const User = model('user', userSchema)
+const User = model('user', userSchema);
 
 export default User;
